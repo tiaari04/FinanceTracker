@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Virtual environment
+venv/
+env/
+ENV/
+*.env
+
+# VSCode / IDEs
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Alembic / migrations (optional, if you don’t want to push migration scripts)
+# alembic/versions/*
+
+# Database files (local SQLite or temp files)
+*.db
+*.sqlite3
+
+# Logs
+*.log
+
+# Pytest cache
+.pytest_cache/
