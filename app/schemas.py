@@ -1,5 +1,5 @@
-from datetime import date
-from pydantic import BaseModel, Field
+import datetime
+from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional
 
 class CategoryBase(BaseModel):
@@ -8,29 +8,24 @@ class CategoryBase(BaseModel):
 class Category(CategoryBase):
     category_id: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # for API POST reuqests
 class TransactionBase(BaseModel):
     amount: float = Field(..., gt=0)
-    date: Optional[date]
+    date: Optional[datetime.date] = None
     description: Optional[str] = None
 
 class TransactionCreate(TransactionBase):
     category: str
 
 # for API responses
-class Transaction(BaseModel):
+class TransactionResponse(BaseModel):
     transaction_id: int
     amount: float
-    date: date
+    date: datetime.date
     description: Optional[str] = None
     category_id: int
-    category: Optional[Category] = None
+    category: Category
 
-    class Config:
-        from_attributes = True
-
-class TransactionListResponse(BaseModel):
-    data: list[Transaction]
+    model_config = ConfigDict(from_attributes=True)
