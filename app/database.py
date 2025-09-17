@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from typing import Generator 
 
 load_dotenv()
 
@@ -18,3 +19,10 @@ connection_string = f"postgresql+psycopg2://{db_user}:{db_pwd}@{db_host}:{db_por
 engine = create_engine(connection_string)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
+
+def get_db() -> Generator:
+    try:
+        db = SessionLocal()
+        yield db
+    finally:
+        db.close()

@@ -4,22 +4,28 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
-from database import Base
 
-import os
+from database import Base
+from models import Transaction, Category
+import os # used to be able to load my environment variables
 from dotenv import load_dotenv
 
-# this is the Alembic Config object, which provides
-# access to the values within the .ini file in use.
-config = context.config
+load_dotenv()
 
+# Access database credentials
 db_host = os.getenv("DB_HOST")
 db_port = os.getenv("DB_PORT")
 db_name = os.getenv("DB_NAME")
 db_user = os.getenv("DB_USER")
 db_pwd = os.getenv("DB_PWD")
 
-config.set_main_option("sqlalchemy.url",f"postgresql+psycopg2://{db_user}:{db_pwd}@{db_host}:{db_port}/{db_name}")
+url = f"postgresql+psycopg2://{db_user}:{db_pwd}@{db_host}:{db_port}/{db_name}"
+
+
+# this is the Alembic Config object, which provides
+# access to the values within the .ini file in use.
+config = context.config
+config.set_main_option("sqlalchemy.url",url)
 
 
 # Interpret the config file for Python logging.

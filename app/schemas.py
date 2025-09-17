@@ -14,8 +14,8 @@ class Category(CategoryBase):
 # for API POST reuqests
 class TransactionBase(BaseModel):
     amount: float = Field(..., gt=0)
-    date: date
-    description: str
+    date: Optional[date]
+    description: Optional[str] = None
 
 class TransactionCreate(TransactionBase):
     category: str
