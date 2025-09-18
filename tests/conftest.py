@@ -19,7 +19,7 @@ def start_application():
     app.include_router(router)
     return app 
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test_db.db"
+SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
 )
@@ -66,4 +66,3 @@ def client(
     app.dependency_overrides[get_db] = _get_test_db
     with TestClient(app) as client:
         yield client
-        
