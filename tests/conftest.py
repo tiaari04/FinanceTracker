@@ -11,7 +11,7 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) 
 #this is to include backend dir in sys.path so that we can import from db,main.py
 
-from app.database import Base, get_db
+from app import database
 from app.crud import router
 
 def start_application():
@@ -26,15 +26,18 @@ engine = create_engine(
 # Use connect_args parameter only with sqlite
 SessionTesting = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+database._engine = engine
+database.SessionLocal = SessionTesting
+
 @pytest.fixture(scope="function")
 def app() -> Generator[FastAPI, Any, None]:
     """
     Create a fresh database on each test case.
     """
-    Base.metadata.create_all(engine)  # Create the tables.
+    database.Base.metadata.create_all(engine)  # Create the tables.
     _app = start_application()
     yield _app
-    Base.metadata.drop_all(engine)
+    database.Base.metadata.drop_all(engine)
 
 
 @pytest.fixture(scope="function")
@@ -63,6 +66,6 @@ def client(
         finally:
             pass
 
-    app.dependency_overrides[get_db] = _get_test_db
+    app.dependency_overrides[database.get_db] = _get_test_db
     with TestClient(app) as client:
         yield client
