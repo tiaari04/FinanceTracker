@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from app.schemas import TransactionCreate, TransactionsGet
+from app.schemas import TransactionCreate
 from app.models import Transaction, Category
 
 from datetime import date
@@ -63,3 +63,29 @@ def delete_a_transaction(id: int, db:Session):
     db_transaction.delete()
     db.commit()
     return {"msg":f"deleted transaction with id {id}"}
+
+
+# def get_multiple_transactions(query: TransactionsGet, db: Session):
+#     transactions = db.query(Transaction)
+
+    # Handle filter
+    # Only allowing user to filter by amount, category_id and date
+    # and they will only be able to filter using eq, gt, lt, and, or, not
+    # if filter:
+
+    # Handle orderby
+    # able to order by date or amount
+    # if query.orderby:
+    #     if "date desc" in query.orderby.lower():
+    #         transactions = transactions.order_by(query.date.desc())
+    #     elif "date asc" in query.orderby.lower():
+    #         transactions = transactions.order_by(query.date.asc())
+    #     elif "amount desc" in query.orderby.lower():
+    #         transactions = transactions.order_by(query.amount.desc())
+    #     elif "amount asc" in query.orderby.lower():
+    #         transactions = transactions.order_by(query.amount.asc())
+    
+    # Handle top
+    # if top:
+        
+    # return
