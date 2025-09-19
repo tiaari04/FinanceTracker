@@ -1,8 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.schemas import TransactionCreate, TransactionResponse, TransactionListResponse
-from app.schemas import TransactionsGet
+from app.schemas import TransactionCreate, TransactionResponse
 from app.database import get_db
 from app.routes.transactions import create_new_transaction, get_one_transaction, update_a_transaction
 from app.routes.transactions import delete_a_transaction
@@ -21,7 +20,7 @@ def get_transaction(id: int, db: Session = Depends(get_db) ) -> TransactionRespo
     if not transaction:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Transaction not found"
+            detail=f"Transaction with id {id} not found"
         )
     return transaction
 
@@ -35,7 +34,7 @@ def update_transaction(id: int, new_transaction: TransactionCreate, db: Session 
         )
     return transaction
 
-@router.delete("/transaction/{id}")
+@router.delete("/transactions/{id}")
 def delete_transaction(id: int, db:Session = Depends(get_db)):
     transaction_msg = delete_a_transaction(id, db)
     if not transaction_msg:
@@ -44,3 +43,20 @@ def delete_transaction(id: int, db:Session = Depends(get_db)):
             detail=f"Transaction with id {id} not found"
         )
     return transaction_msg
+
+'''
+For if the user wants to check the categories they already have so they don't create another 
+similar category
+'''
+# @router.get("/categories/{name}")
+# def 
+
+# @router.get("/transactions")
+# def get_transactions(query: TransactionsGet = Depends(), db: Session = Depends(get_db)) -> TransactionListResponse:
+#     transactions = get_multiple_transactions(query, db)
+
+#     if not transactions:
+#         raise HTTPException(
+#             status_code=status.HTTP_404_NOT_FOUND,
+#             detail="No transactions found with these filters"
+#         )
