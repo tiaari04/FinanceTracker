@@ -31,7 +31,6 @@ def get_engine():
     return _engine
 
 def get_db() -> Generator:
-    global SessionLocal
     if SessionLocal is None:
         init_engine()
     db = SessionLocal()
