@@ -22,7 +22,7 @@ This project is a **RESTful API** built with **FastAPI** for managing personal f
 
 - **Framework**: FastAPI  
 - **Database ORM**: SQLAlchemy  
-- **Database**: SQLite (for simplicity, but can be easily swapped)  
+- **Database**: SQLite (for testing), PostgreSQL as the working database
 - **Data Models**: Pydantic  
 - **Advanced Filtering**: fastapi-filter  
 - **Testing**: pytest  
@@ -164,3 +164,4 @@ To run the test suite, navigate to the project root and execute the following co
 ``` bash
 pytest
 ```
+
