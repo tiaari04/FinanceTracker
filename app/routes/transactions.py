@@ -1,6 +1,6 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
-from app.schemas import TransactionCreate
+from app.schemas import TransactionCreate, TransactionFilter
 from app.models import Transaction, Category
 
 from datetime import date
@@ -65,27 +65,65 @@ def delete_a_transaction(id: int, db:Session):
     return {"msg":f"deleted transaction with id {id}"}
 
 
-# def get_multiple_transactions(query: TransactionsGet, db: Session):
-#     transactions = db.query(Transaction)
+def get_filtered_transactions(db: Session,
+    filter_params: TransactionFilter,
+    orderby_param: str,
+    top_param: int,
+    skip_param: int,
+    expand_param: str
+):
+    """
+    Builds and returns a SQLAlchemy query based on provided parameters.
+    This function handles all the query-building logic.
+    """
+    query = db.query(Transaction)
 
     # Handle filter
     # Only allowing user to filter by amount, category_id and date
     # and they will only be able to filter using eq, gt, lt, and, or, not
-    # if filter:
+    query = filter_params.filter(query)
+
+    # Handle expand
+    if not expand_param:
+        pass
+    elif expand_param == "category":
+        query = query.options(joinedload(Transaction.category)) 
+    else:
+        return {"msg": "Cannot expand on given parameter. Check parameter spelling or word order"}
+    
 
     # Handle orderby
     # able to order by date or amount
-    # if query.orderby:
-    #     if "date desc" in query.orderby.lower():
-    #         transactions = transactions.order_by(query.date.desc())
-    #     elif "date asc" in query.orderby.lower():
-    #         transactions = transactions.order_by(query.date.asc())
-    #     elif "amount desc" in query.orderby.lower():
-    #         transactions = transactions.order_by(query.amount.desc())
-    #     elif "amount asc" in query.orderby.lower():
-    #         transactions = transactions.order_by(query.amount.asc())
+    if orderby_param:
+        sort_clauses = []
+        # Split sort criteria by ","
+        sort_criteria = orderby_param.split(',')
+        for criteria in sort_criteria:
+            criteria = criteria.strip()
+            print(criteria)
+            if "date desc" in criteria.lower():
+                sort_clauses.append(Transaction.date.desc())
+            elif "date asc" in criteria.lower():
+                sort_clauses.append(Transaction.date.asc())
+            elif "amount desc" in criteria.lower():
+                sort_clauses.append(Transaction.amount.desc())
+            elif "amount asc" in criteria.lower():
+                sort_clauses.append(Transaction.amount.asc())
+            else:
+                return {"msg": "Cannot order by given parameters. Check parameter spelling or word order"}
+
+        if sort_clauses:
+            query = query.order_by(*sort_clauses)
+        # else:
+        #     return {"msg": "Cannot order by given parameters. Check parameter spelling or word order"}
     
     # Handle top
-    # if top:
-        
-    # return
+    if top_param:
+        query= query.limit(top_param)
+
+    # Handle skip
+    if skip_param:
+        query = query.offset(skip_param)
+    
+    transactions = query.all()
+    return transactions
