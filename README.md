@@ -52,9 +52,9 @@ Follow these steps to get the API running on your local machine.
    pip install -r requirements.txt
 
 3. Run the API server:
-  ```bash
-  uvicorn app.main:app --reload
-  ```
+     ```bash
+     uvicorn app.main:app --reload
+     ```
 The API will now be running at http://127.0.0.1:8000
 
 
@@ -119,6 +119,7 @@ Retrieves a list of transactions with advanced filtering, sorting, and paginatio
 **Query Parameters:**
 
 - ```$filter``` (optional): Filter the results. Supports amount, date, and category_id fields.
+
   **Examples:**
   ``` text
   ?amount__gt=50
@@ -127,41 +128,47 @@ Retrieves a list of transactions with advanced filtering, sorting, and paginatio
   ```
 
 - ```$orderby``` (optional): Sort the results.
+  
   **Syntax:**
   ```text
   ?orderby=<field> [asc|desc]
   ```
   with comma-separated fields for multi-level sorting.
+  
   **Examples:**
   ```text
   ?orderby=amount desc
-  ?orderby=date asc,amount desc
+  ?orderby=date asc, amount desc
   ```
 
 - ```$top``` (optional): Limits the number of results.
-**Constraints:** Must be an integer between 1 and 100.
-**Example:**
-```text
-?top=10
-```
+   **Constraints:** Must be an integer between 1 and 100.
+  
+   **Example:**
+   ```text
+   ?top=10
+   ```
 
 - ```$skip``` (optional): Skips a specified number of results (for pagination).
-**Constraints**: Must be a non-negative integer.
-**Example**:
-```text
-?skip=20
-```
+   **Constraints**: Must be a non-negative integer.
+  
+   **Example**:
+   ```text
+   ?skip=20
+   ```
 
 - ```$expand``` (optional): Expands related data.
-**Supported value**: category.
-**Example:**
-```text
-?expand=category
-```
+   **Supported value**: category.
+  
+   **Example:**
+   ```text
+   ?expand=category
+   ```
 
 ## Running Tests
 To run the test suite, navigate to the project root and execute the following command:
 ``` bash
 pytest
 ```
+
 
